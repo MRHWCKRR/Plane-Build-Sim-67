@@ -122,7 +122,6 @@ main { max-width: 1920px; margin: auto; padding: 0 28px 22px; outline: none; }
 .part-card:hover { border-color: #8cafe1; background: #fafcff; }
 .part-card:active { cursor: grabbing; }
 .part-card.selected { background: #ecf3ff; border: 2px solid #3374e5; padding: 8px 9px 9px; box-shadow: 0 0 0 2px #e3eeff; }
-.card-photo { width: 55px; height: 45px; border-radius: 3px; background-size: 350%; background-repeat: no-repeat; filter: saturate(.75); }
 .card-grip { position: absolute; top: 10px; right: 9px; font-size: 14px; color: #b0bfcd; }
 .card-name { font-size: 10px; line-height: 1.3; font-weight: 600; }
 .definition-card { width: 207px; min-width: 207px; padding: 12px; justify-content: center; background: #fcfdff; }
@@ -162,3 +161,67 @@ dialog ol { padding-left: 20px; }
 @media (max-width:580px) { .game-shell, .sidebar-collapsed .game-shell { display: block; } .sidebar { position: relative; top: auto; width: 100%; height: 61px; padding: 0 15px; flex-direction: row; justify-content: space-between; align-items: center; } .sidebar .brand { padding: 0; } .sidebar .brand .sidebar-text { display: block; font-size: 8px; line-height: 1.2; } .brand small { font-size: 5px; margin-top: 4px; letter-spacing: 1.5px; } .brand-logo { width: 30px; height: 30px; font-size: 18px; } .sidebar #sidebar-content { margin: 0; display: flex; gap: 4px; } .sidebar .sidebar-kicker, .sidebar .mission-card, .sidebar .side-link.active, .sidebar-bottom { display: none; } .side-link { margin: 0; min-height: 35px; width: 34px; padding: 7px!important; } .game-header { height: 81px; padding: 16px 18px; gap: 10px; } .game-header .micro { font-size: 5px; letter-spacing: .9px; } .game-header h1 { font-size: 23px; margin-top: 5px; } .header-actions { gap: 10px; } .score-pill { font-size: 8px; gap: 4px; } .score-pill>span:first-child { font-size: 16px; } .icon-button { height: 31px; width: 31px; font-size: 20px; } main { padding: 0 12px 18px; } .play-topline { padding: 14px 3px 12px; font-size: 6px; letter-spacing: 1.2px; } .scene { height: 400px; min-height: 0; border-radius: 7px; background: #e5eff5; } .scene-heading { left: 13px; top: 14px; } .scene-heading .micro { font-size: 5px; max-width: 125px; letter-spacing: .7px; } .scene-heading h2 { font-size: 21px; margin-top: 4px; } .view-switcher { top: 10px; right: 10px; padding: 7px; width: 121px; } .view-switcher>.micro { font-size: 5px; margin-bottom: 5px; letter-spacing: .8px; } .view-button { min-height: 26px; padding: 4px; font-size: 8px; } .view-button .view-count { font-size: 6px; } .view-button .view-icon { font-size: 12px; width: 15px; } .scene-world { margin-top: 45px; } .hotspot { width: 29px; height: 29px; font-size: 9px; } .camera-tools { padding: 3px; } .camera-tools button { height: 29px; width: 29px; } .scene-bottom { bottom: 11px; right: 11px; left: 11px; } .feedback-bar { align-items: center; min-height: 60px; gap: 7px; padding: 5px 2px; } .feedback-bar p { font-size: 9px; max-width: 74%; } .hint-button { font-size: 8px; gap: 4px; padding-right: 0; } .hint-button>span { font-size: 15px; } .parts-tray { padding: 17px 12px 12px; border-radius: 7px; } .tray-heading { align-items: flex-start; flex-direction: column; gap: 12px; } .tray-heading h2 { font-size: 17px; } .tray-heading .micro { font-size: 5px; letter-spacing: 1.3px; } .tray-mode { width: 100%; } .tray-mode button { padding: 10px; font-size: 10px; width: 50%; } .tray-subtitle { align-items: flex-start; font-size: 8px; gap: 10px; margin-top: 12px; } .tray-subtitle>span:first-child { max-width: 66%; } #remaining-count { white-space: normal; text-align: right; max-width: 29%; } .card-deck { min-height: 116px; padding-top: 4px; } .part-card { min-width: 135px; height: 100px; padding: 10px; } .definition-card { min-width: 204px; padding: 12px; } .card-name { font-size: 10px; } .tray-footer { font-size: 6px; gap: 10px; } .tray-footer>span:first-child { max-width: 56%; } .tray-footer>span:last-child { text-align: right; font-size: 5px; letter-spacing: .4px; max-width: 40%; } dialog { padding: 33px 23px 25px; } dialog h2 { font-size: 28px; } .deck-complete { flex-direction: column; align-items: flex-start; gap: 10px; } .deck-complete p { font-size: 11px; } }
 @media (prefers-reduced-motion:reduce) { *, *::before, *::after { transition: none!important; animation: none!important; } }
 @media(max-width:580px) { .tray-subtitle { flex-wrap: wrap; } .tray-subtitle>span:first-child { max-width: 100%; flex-basis: 100%; } .deck-controls { width: 100%; } .deck-controls #remaining-count { max-width: none; white-space: nowrap; margin-right: auto; font-size: 8px; } .deck-controls button { width: 33px; height: 33px; } }
+
+/* The notes rail stays reserved so opening it never moves a drop target mid-drag. */
+.scene-row { display: grid; grid-template-columns: minmax(0,1fr) 216px; gap: 15px; margin-top: 22px; align-items: start; }
+.part-notes { position: relative; padding: 22px 18px; background: #fff; border: 1px solid #dae5ef; border-radius: 8px; }
+.part-notes[hidden] { display: block; visibility: hidden; pointer-events: none; }
+.part-notes .micro { color: #8193a5; font-size: 7px; }
+.part-notes h3 { font-size: 19px; line-height: 1.2; letter-spacing: -.4px; font-weight: 500; margin: 12px 0 23px; padding-right: 7px; }
+.note-kicker { display: block; font-size: 7px; font-weight: 700; letter-spacing: 1.2px; color: #3d6ca2; margin-top: 17px; }
+.part-notes p:not(.micro) { font-size: 11px; line-height: 1.7; color: #647b90; margin: 7px 0 0; }
+#close-part-notes { position: absolute; right: 9px; top: 9px; width: 25px; height: 25px; background: #f1f5f9; border: 0; border-radius: 50%; color: #6e8499; font-size: 18px; }
+#part-source { display: inline-block; font-size: 9px; color: #477bb6; margin-top: 23px; }
+.aircraft-badge { font-size: 11px; letter-spacing: 0; color: #627e98; background: #eff4fa; padding: 7px 10px; border-radius: 4px; }
+#sidebar-content { min-height: 0; overflow-y: auto; scrollbar-width: thin; scrollbar-color: #4c6680 transparent; }
+.aircraft-picker { border-top: 1px solid #35516b; margin: 23px 5px 0; padding-top: 18px; }
+.aircraft-picker>.micro { color: #7f9ab5; font-size: 7px; margin: 0 9px 11px; }
+.aircraft-button { display: flex; align-items: center; width: 100%; gap: 10px; padding: 11px 9px; margin: 3px 0; text-align: left; border: 1px solid transparent; background: transparent; border-radius: 5px; color: #b6c9dc; }
+.aircraft-button[aria-pressed=true] { background: #253f5c; border-color: #4a6b8f; color: white; }
+.aircraft-button:hover { background: #2a4661; }
+.plane-code { display: grid; place-items: center; width: 31px; height: 31px; flex-shrink: 0; border-radius: 5px; background: #ffffff0b; font-size: 10px; color: #b0cfff; }
+.aircraft-button .sidebar-text { font-size: 11px; }
+.aircraft-button small { display: block; color: #839db6; font-size: 8px; margin-top: 5px; }
+.sidebar-kicker { margin-top: 30px; }
+.mission-card { margin-top: 20px; padding: 17px 14px; }
+.mission-progress { margin-top: 16px; }
+.mobile-aircraft-picker { display: none; }
+.part-card { justify-content: center; min-height: 75px; height: 80px; }
+.card-name { font-size: 12px; padding-right: 8px; }
+.definition-card .card-name { font-size: 11px; }
+.card-deck { min-height: 95px; }
+.sidebar-collapsed .aircraft-picker { margin: 20px 0 0; }
+.sidebar-collapsed .aircraft-button { justify-content: center; padding: 7px; }
+.view-switcher { width: 244px; }
+#view-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.view-button { font-size: 9px; gap: 6px; padding: 7px 5px; }
+@media(max-width:1100px) {
+ .view-switcher { width: 210px; }
+ .view-button { font-size: 8px; gap: 4px; padding: 6px 3px; }
+ .scene-row { grid-template-columns: minmax(0,1fr); }
+ .part-notes { position: fixed; bottom: 16px; right: 16px; width: 235px; z-index: 14; padding: 17px; box-shadow: 0 8px 40px #15334d30; pointer-events: none; }
+ .part-notes[hidden] { display: none; }
+ #close-part-notes, #part-source { pointer-events: auto; }
+ .part-notes h3 { font-size: 17px; margin: 9px 0 13px; }
+ .note-kicker { margin-top: 12px; font-size: 6px; }
+ .part-notes p:not(.micro) { font-size: 10px; line-height: 1.6; }
+ #part-source { margin-top: 12px; font-size: 8px; }
+}
+@media(max-width:800px) {
+ .view-switcher { width: 125px; }
+ #view-buttons { display: block; }
+ .aircraft-picker { display: none; }
+ .mobile-aircraft-picker { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-top: 17px; font-size: 10px; color: #6e8499; }
+ .mobile-aircraft-picker select { min-width: 170px; padding: 10px; font: inherit; color: #214567; background: white; border: 1px solid #d8e3ed; border-radius: 5px; }
+ .aircraft-badge { font-size: 9px; padding: 6px 7px; }
+ .scene-row { margin-top: 15px; }
+}
+@media(max-width:580px) {
+ .view-switcher { width: 121px; }
+ .aircraft-badge { display: none; }
+ .part-card { height: 80px; }
+ .part-notes { width: 220px; padding: 14px; }
+ .part-notes h3 { margin-bottom: 11px; }
+ .part-notes .note-kicker { font-size: 6px; }
+ .part-notes p:not(.micro) { font-size: 10px; }
+}

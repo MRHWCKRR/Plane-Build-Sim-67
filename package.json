@@ -6,8 +6,8 @@
     "dev": "node scripts/serve.mjs",
     "build": "node scripts/build.mjs",
     "preview": "node scripts/serve.mjs --dist",
-    "test": "node --test tests/game-state.test.mjs && node node_modules/playwright/cli.js test",
-    "test:unit": "node --test tests/game-state.test.mjs"
+    "test": "node --test tests/*-state.test.mjs && node node_modules/playwright/cli.js test",
+    "test:unit": "node --test tests/*-state.test.mjs"
   },
   "repository": {
     "type": "git",

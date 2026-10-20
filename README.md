@@ -8,7 +8,11 @@ A sky-themed introduction with locally hosted AI-generated airplane imagery and 
 
 ## Aircraft Lab
 
-Explore four AI-generated photographic scenes: the exterior of a twin-engine passenger jet, the cockpit, the passenger cabin, and a close-up of the tail. Match 20 part names and their 20 short definitions to numbered markers. The old “Good things are taking shape” section has been removed.
+Choose a Boeing 737, Boeing 787, Airbus A220, or F/A-18 Hornet. Each aircraft has distinct AI-generated scenes and its own saved progress. Airliners have exterior, cockpit, cabin and tail views; the fighter has exterior, cockpit and tail views. Airliners each offer 40 name/function matches; the Hornet offers 32.
+
+Part cards are text-only. Selecting or dragging a name opens a brief history and fun-fact panel, with a source link. Definition cards reveal their notes only after a correct match. The desktop notes column stays reserved so targets do not shift during a drag; smaller screens use a compact dismissible overlay. The “Explore, match, discover” strip has been removed.
+
+Aircraft-specific details include raked wingtips on the 787, a sidestick in the A220, and a canopy, control stick, ejection seat and stabilator on the Hornet. The Hornet has no passenger cabin and omits airliner-only tasks. Its engine target is in the rear view where the exhausts are visible.
 
 - Collapsible desktop sidebar and compact mobile navigation.
 - Switch views freely without losing progress.
@@ -31,7 +35,7 @@ The production site is static HTML, CSS, and JavaScript with no runtime dependen
 - `npm run build` — copy public files into `dist` (no dependencies required).
 - `npm run preview` — serve the production output.
 - `npx playwright install chromium` — install the browser for checks.
-- `npm test` — run five game-state checks and 17 browser checks against the production output; build first.
+- `npm test` — run nine state checks and 23 browser checks against the production output; build first.
 - `npm run test:unit` — run the game-state checks without a browser.
 
 To use an existing browser, set `PLAYWRIGHT_EXECUTABLE_PATH` to its executable path before running tests.
@@ -50,9 +54,12 @@ Vercel reads `vercel.json`, runs `npm run build`, and serves `dist`. Pushes to t
 - `game.html`: playable aircraft lab.
 - `game/data.mjs`: view metadata, part definitions, physical points and marker offsets.
 - `game/state.mjs`: validated progress and matching rules.
+- `game/fleet.mjs`: aircraft-specific parts, view availability and calibrated marker positions.
+- `game/facts.mjs`: brief part histories, fun facts and reference links.
 - `game/game.mjs`: game interactions, drag gestures, navigation, camera and dialogs.
 - `game/game.css`: responsive game layout and controls.
 - `assets/game/README.md`: built-in ImageGen prompts for the four new raster environments.
+- `assets/game/FLEET-ARTWORK.md`: built-in ImageGen prompts for 11 additional aircraft scenes.
 
 The production page has no runtime dependencies, server, account system, or remote progress storage.
 

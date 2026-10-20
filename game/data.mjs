@@ -11,7 +11,7 @@ export const parts = [
   { id: 'slats', name: 'Slats', view: 'exterior', x: 75, y: 53, dx: 3, dy: -10, definition: 'Leading-edge devices that help the wing lift at low speeds.', hint: 'Look along the front edge of the wing.' },
   { id: 'flaps', name: 'Flaps', view: 'exterior', x: 64, y: 58, dx: 6, dy: 13, definition: 'Trailing-edge panels that increase lift and drag at low speeds.', hint: 'Look behind the wing, closer to the fuselage than the aileron.' },
   { id: 'spoiler', name: 'Spoiler', view: 'exterior', x: 67, y: 55, dx: -1, dy: -11, definition: 'A wing-top panel that reduces lift and increases drag.', hint: 'Find a panel on the top surface of the wing.' },
-  { id: 'winglets', name: 'Winglets', view: 'exterior', x: 95, y: 45, dx: -1, dy: -5, definition: 'Wingtip extensions that reduce drag caused by wingtip vortices.', hint: 'Find the upturned tip at the end of the wing.' },
+  { id: 'winglets', name: 'Winglets', view: 'exterior', x: 95, y: 45, dx: -1, dy: 5, definition: 'Wingtip extensions that reduce drag caused by wingtip vortices.', hint: 'Find the upturned tip at the end of the wing.' },
   { id: 'cockpit', name: 'Cockpit', view: 'exterior', x: 15, y: 60, dx: -7, dy: -9, definition: 'The forward compartment where pilots operate the aircraft.', hint: 'Look at the windshield near the nose.' },
   { id: 'fuselage', name: 'Fuselage', view: 'exterior', x: 45, y: 49, dx: 0, dy: -12, definition: 'The main body holding the cockpit, cabin and cargo.', hint: 'Find the long central body of the aircraft.' },
   { id: 'windows', name: 'Windows', view: 'exterior', x: 35, y: 55, dx: -5, dy: -10, definition: 'Glazed openings that let people see outside.', hint: 'Look for the row of small openings along the body.' },

@@ -1,10 +1,16 @@
-import { parts, views, TOTAL_MATCHES, SOURCE_URL } from './data.mjs';
-import { createState, restoreState, placeCard, countMatches } from './state.mjs';
+import { SOURCE_URL } from './data.mjs';
+import { aircraft, getAircraft, getParts, getViews, sceneBase } from './fleet.mjs';
+import { factsFor } from './facts.mjs';
+import { createState, restoreFleet, placeCard, countMatches } from './state.mjs';
 
 const $ = selector => document.querySelector(selector);
-const STORAGE_KEY = 'pbs67-game-v1';
-let state = createState();
-try { state = restoreState(localStorage.getItem(STORAGE_KEY)); } catch { /* Playable without storage. */ }
+const STORAGE_KEY = 'pbs67-fleet-v1';
+let fleet = restoreFleet(null);
+try { fleet = restoreFleet(localStorage.getItem(STORAGE_KEY), localStorage.getItem('pbs67-game-v1')); } catch { /* Playable without storage. */ }
+let state = fleet.progress[fleet.active];
+const allParts = () => getParts(state.aircraft);
+const availableViews = () => getViews(state.aircraft);
+const totalMatches = () => allParts().length * 2;
 let selected = null;
 let zoom = 1;
 let pointer = { x: 0, y: 0 };
@@ -27,7 +33,9 @@ let resizeObserver;
 
 function save() {
   try {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    fleet.active = state.aircraft;
+    fleet.progress[state.aircraft] = state;
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(fleet));
     $('#save-status').textContent = 'Progress saved on this device';
   } catch {
     $('#save-status').textContent = 'Playing without saving';
@@ -39,11 +47,42 @@ function say(text, type = '') {
   feedback.className = type;
 }
 
-function currentParts() { return parts.filter(part => part.view === state.view); }
+function currentParts() { return allParts().filter(part => part.view === state.view); }
 function isMatched(id, mode = state.mode) { return state.matches[mode].includes(id); }
 
+function showPartNotes(part) {
+  const notes = factsFor(part, state.aircraft);
+  if (!notes) return;
+  $('#part-note-title').textContent = part.name;
+  $('#part-history').textContent = notes[0];
+  $('#part-fact').textContent = notes[1];
+  $('#part-source').href = notes[2];
+  $('#part-notes').hidden = false;
+}
+
+function renderAircraftPicker() {
+  $('#aircraft-buttons').innerHTML = aircraft.map(plane => `<button class="aircraft-button" data-aircraft="${plane.id}" aria-label="Fly ${plane.name}" aria-pressed="${plane.id === state.aircraft}"><span class="plane-code">${plane.short}</span><span class="sidebar-text">${plane.name}<small>${plane.description}</small></span></button>`).join('');
+  $('#mobile-aircraft').innerHTML = aircraft.map(plane => `<option value="${plane.id}">${plane.name}</option>`).join('');
+  $('#mobile-aircraft').value = state.aircraft;
+  $('#active-aircraft').textContent = getAircraft(state.aircraft).name;
+}
+
+function switchAircraft(id) {
+  if (!aircraft.some(plane => plane.id === id)) return;
+  save();
+  dragGhost?.remove();
+  dragGhost = null;
+  cardDrag = null;
+  dragging = false;
+  fleet.active = id;
+  state = fleet.progress[id];
+  renderAircraftPicker();
+  viewButtons();
+  switchView(state.view);
+}
+
 function viewButtons() {
-  $('#view-buttons').innerHTML = views.map(view => `<button type="button" class="view-button" data-view="${view.id}" aria-label="View ${view.name}" aria-pressed="${view.id === state.view}"><img class="view-thumb" src="/assets/game/${view.id}-thumb.webp" alt="" width="24" height="18"><span>${view.name}</span><span class="view-count">0/0</span></button>`).join('');
+  $('#view-buttons').innerHTML = availableViews().map(view => `<button type="button" class="view-button" data-view="${view.id}" aria-label="View ${view.name}" aria-pressed="${view.id === state.view}"><img class="view-thumb" src="${sceneBase(state.aircraft, view.id)}-thumb.webp" alt="" width="24" height="18"><span>${view.name}</span><span class="view-count">0/0</span></button>`).join('');
 }
 
 function renderMarkers() {
@@ -84,7 +123,7 @@ function renderMarkers() {
 }
 
 function shuffledIds() {
-  const key = `${state.view}:${state.mode}`;
+  const key = `${state.aircraft}:${state.view}:${state.mode}`;
   if (!orders.has(key)) {
     const ids = currentParts().map(part => part.id);
     for (let i = ids.length - 1; i > 0; i--) {
@@ -100,7 +139,7 @@ function renderCards() {
   const remaining = shuffledIds().filter(id => !isMatched(id));
   const fragment = document.createDocumentFragment();
   for (const id of remaining) {
-    const part = parts.find(item => item.id === id);
+    const part = allParts().find(item => item.id === id);
     const card = document.createElement('button');
     card.type = 'button';
     card.className = `part-card${state.mode === 'functions' ? ' definition-card' : ''}`;
@@ -114,14 +153,6 @@ function renderCards() {
     grip.textContent = '⠿';
     grip.setAttribute('aria-hidden', 'true');
     card.append(grip);
-    if (state.mode === 'names') {
-      const photo = document.createElement('span');
-      photo.className = 'card-photo';
-      photo.setAttribute('aria-hidden', 'true');
-      photo.style.backgroundImage = `url('/assets/game/${part.view}-900.webp')`;
-      photo.style.backgroundPosition = `${part.x}% ${part.y}%`;
-      card.append(photo);
-    }
     const label = document.createElement('span');
     label.className = 'card-name';
     label.textContent = text;
@@ -133,7 +164,7 @@ function renderCards() {
     box.className = 'deck-complete';
     const text = document.createElement('p');
     const action = document.createElement('button');
-    if (countMatches(state) === TOTAL_MATCHES) {
+    if (countMatches(state) === totalMatches()) {
       text.textContent = 'Every part. Every purpose. You know your aircraft!';
       action.textContent = 'Your flight report ↗';
       action.addEventListener('click', showCompletion);
@@ -147,7 +178,7 @@ function renderCards() {
         text.textContent = 'This view is complete. A new perspective is waiting.';
         action.textContent = 'Explore the next view →';
         action.addEventListener('click', () => {
-          const next = views.find(view => countMatches(state, view.id) < parts.filter(part => part.view === view.id).length * 2);
+          const next = availableViews().find(view => countMatches(state, view.id) < allParts().filter(part => part.view === view.id).length * 2);
           if (next) switchView(next.id);
         });
       }
@@ -173,17 +204,18 @@ function updateDeckControls() {
 function updateProgress() {
   const total = countMatches(state);
   $('#match-count').textContent = String(total);
-  $('#sidebar-count').textContent = `${total} / ${TOTAL_MATCHES}`;
-  $('#sidebar-progress').style.width = `${total / TOTAL_MATCHES * 100}%`;
+  $('#total-count').textContent = String(totalMatches());
+  $('#sidebar-count').textContent = `${total} / ${totalMatches()}`;
+  $('#sidebar-progress').style.width = `${total / totalMatches() * 100}%`;
   $('#view-progress').textContent = `${state.view.toUpperCase()} / ${countMatches(state, state.view)} OF ${currentParts().length * 2} MATCHED`;
   for (const button of document.querySelectorAll('[data-view]')) {
     const view = button.dataset.view;
     button.setAttribute('aria-pressed', String(view === state.view));
-    button.querySelector('.view-count').textContent = `${countMatches(state, view)}/${parts.filter(part => part.view === view).length * 2}`;
+    button.querySelector('.view-count').textContent = `${countMatches(state, view)}/${allParts().filter(part => part.view === view).length * 2}`;
   }
   for (const button of document.querySelectorAll('[data-target]')) {
     const id = button.dataset.target;
-    const part = parts.find(item => item.id === id);
+    const part = allParts().find(item => item.id === id);
     const matched = isMatched(id);
     button.classList.toggle('correct', matched);
     button.classList.toggle('named', isMatched(id, 'names'));
@@ -203,7 +235,9 @@ function chooseCard(id) {
     card.classList.toggle('selected', card.dataset.card === id);
     card.setAttribute('aria-pressed', String(card.dataset.card === id));
   }
-  const part = parts.find(item => item.id === id);
+  const part = allParts().find(item => item.id === id);
+  if (state.mode === 'names') showPartNotes(part);
+  else $('#part-notes').hidden = true;
   $('#scene-instruction').textContent = state.mode === 'names' ? `${part.name} selected. Choose its numbered spot.` : 'Function selected. Choose the part that does this job.';
 }
 
@@ -222,6 +256,7 @@ function attempt(targetId) {
   }
   if (result.duplicate) { say('You’ve already matched this one. Try another card.'); return; }
   const part = result.part;
+  showPartNotes(part);
   say(`${part.name} — ${part.definition} Nice work!`, 'success');
   selected = null;
   document.querySelectorAll('.hinted,.drop-ready').forEach(button => button.classList.remove('hinted', 'drop-ready'));
@@ -229,13 +264,14 @@ function attempt(targetId) {
   save();
   renderCards();
   updateProgress();
-  if (countMatches(state) === TOTAL_MATCHES) showCompletion();
+  if (countMatches(state) === totalMatches()) showCompletion();
 }
 
 function switchMode(mode) {
   if (!['names', 'functions'].includes(mode)) return;
   state.mode = mode;
   selected = null;
+  $('#part-notes').hidden = true;
   document.querySelectorAll('.hinted').forEach(button => button.classList.remove('hinted'));
   $('#scene-instruction').textContent = mode === 'names' ? 'Select a part name, then choose its numbered spot.' : 'Match each short definition to its spot on the aircraft.';
   say(mode === 'names' ? 'Put a name to the parts you see.' : 'What’s its job? Match the definition to the right part.');
@@ -279,18 +315,19 @@ function setZoom(value) { zoom = Math.max(1, Math.min(3, Math.round(value * 100)
 function resetCamera() { zoom = 1; pointer = { x: 0, y: 0 }; requestCamera(); }
 
 function switchView(id) {
-  const view = views.find(item => item.id === id);
+  const view = availableViews().find(item => item.id === id);
   if (!view) return;
   state.view = id;
   selected = null;
+  $('#part-notes').hidden = true;
   $('#scene-title').textContent = view.name;
-  $('#view-kicker').textContent = `${String(views.indexOf(view) + 1).padStart(2, '0')} / ${view.subtitle.toUpperCase()}`;
+  $('#view-kicker').textContent = `${String(availableViews().indexOf(view) + 1).padStart(2, '0')} / ${view.subtitle.toUpperCase()}`;
   $('#scene-instruction').textContent = 'Select a card below, then choose its numbered spot.';
   loading.hidden = false;
   loading.textContent = 'Preparing your view…';
   sceneImage.alt = view.alt;
-  sceneImage.srcset = `/assets/game/${id}-900.webp 900w, /assets/game/${id}-1440.webp 1440w`;
-  sceneImage.src = `/assets/game/${id}-1440.webp`;
+  sceneImage.srcset = `${sceneBase(state.aircraft, id)}-900.webp 900w, ${sceneBase(state.aircraft, id)}-1440.webp 1440w`;
+  sceneImage.src = `${sceneBase(state.aircraft, id)}-1440.webp`;
   if (sceneImage.complete && sceneImage.naturalWidth) loading.hidden = true;
   renderMarkers();
   renderCards();
@@ -307,20 +344,23 @@ function openDialog(html) {
   dialog.showModal();
 }
 function showCompletion() {
-  openDialog(`<div class="achievement" aria-hidden="true">✦</div><p class="micro">ALL KNOWLEDGE ON BOARD</p><h2 id="dialog-title">Cleared for takeoff!</h2><p>You explored every corner, named every part and matched every purpose. That’s an aircraft’s worth of discovery.</p><div class="completion-stats"><div><strong>20</strong><span>parts discovered</span></div><div><strong>40</strong><span>matches made</span></div><div><strong>4</strong><span>views explored</span></div></div><p>Curiosity looks good on you. Take another look around, or start a fresh flight.</p><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Keep exploring</button><button class="dialog-button" data-dialog-action="reset">Start a fresh flight</button></div>`);
+  openDialog(`<div class="achievement" aria-hidden="true">✦</div><p class="micro">ALL KNOWLEDGE ON BOARD</p><h2 id="dialog-title">Cleared for takeoff!</h2><p>You explored every corner, named every part and matched every purpose. That’s an aircraft’s worth of discovery.</p><div class="completion-stats"><div><strong>${allParts().length}</strong><span>parts discovered</span></div><div><strong>${totalMatches()}</strong><span>matches made</span></div><div><strong>${availableViews().length}</strong><span>views explored</span></div></div><p>Curiosity looks good on you. Take another look around, or start a fresh flight.</p><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Keep exploring</button><button class="dialog-button" data-dialog-action="reset">Start a fresh flight</button></div>`);
 }
 function showHelp() {
   openDialog(`<p class="micro">WELCOME TO YOUR AIRCRAFT LAB</p><h2 id="dialog-title">A little curiosity is all you need.</h2><ol><li><strong>Pick a view.</strong> Explore the exterior, cockpit, passenger cabin or tail. Switch whenever you like.</li><li><strong>Choose your round.</strong> Match part names first, then switch to “What they do” to match definitions.</li><li><strong>Make a match.</strong> Drag a card onto its numbered marker, or select the card and then select the marker. Keyboard users can use Tab and Enter.</li><li><strong>Look closer.</strong> Scroll over the aircraft to zoom, or use + and −. At higher zoom, move your pointer toward an edge to look that way. Use ⤢ to reset.</li><li><strong>Keep discovering.</strong> Hints are free. Wrong guesses never cost points. Progress saves on this device when storage is available.</li></ol><p>The scenes are AI-generated, with gentle photo-based camera motion. This is an identification game, not a flight simulator.</p><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Let’s explore →</button></div>`);
 }
 function showGuide() {
-  const sections = views.map(view => `<h3>${view.name}</h3>${parts.filter(part => part.view === view.id).map(part => `<div class="guide-part"><strong>${part.name}</strong><p>${part.definition}</p></div>`).join('')}`).join('');
+  const sections = availableViews().map(view => `<h3>${view.name}</h3>${allParts().filter(part => part.view === view.id).map(part => `<div class="guide-part"><strong>${part.name}</strong><p>${part.definition}</p></div>`).join('')}`).join('');
   openDialog(`<p class="micro">A LITTLE KNOW-HOW</p><h2 id="dialog-title">Your aircraft field guide.</h2><p>A quick reference for every part and purpose. There’s no penalty for looking things up.</p>${sections}<a class="guide-source" href="${SOURCE_URL}" target="_blank" rel="noopener noreferrer">Further learning: FAA aviation handbooks ↗</a><p>Images are illustrative AI-generated aircraft scenes. Labels identify approximate regions; actual aircraft designs vary.</p>`);
 }
 function confirmReset() {
-  openDialog(`<p class="micro">A FRESH START</p><h2 id="dialog-title">Ready for another flight?</h2><p>This clears your 40-match progress on this device. You can keep exploring with your current progress instead.</p><div class="dialog-actions"><button class="dialog-button" data-dialog-action="close">Keep my progress</button><button class="dialog-button primary" data-dialog-action="reset">Start fresh</button></div>`);
+  openDialog(`<p class="micro">A FRESH START</p><h2 id="dialog-title">Ready for another flight?</h2><p>This clears your ${totalMatches()}-match progress for ${getAircraft(state.aircraft).name} only. You can keep exploring with your current progress instead.</p><div class="dialog-actions"><button class="dialog-button" data-dialog-action="close">Keep my progress</button><button class="dialog-button primary" data-dialog-action="reset">Start fresh</button></div>`);
 }
 
 $('#view-buttons').addEventListener('click', event => { const button = event.target.closest('[data-view]'); if (button) switchView(button.dataset.view); });
+$('#aircraft-buttons').addEventListener('click', event => { const button = event.target.closest('[data-aircraft]'); if (button) switchAircraft(button.dataset.aircraft); });
+$('#mobile-aircraft').addEventListener('change', event => switchAircraft(event.target.value));
+$('#close-part-notes').addEventListener('click', () => { $('#part-notes').hidden = true; });
 $('#cards-back').addEventListener('click', () => deck.scrollBy({ left: -deck.clientWidth * 0.75, behavior: reducedMotion.matches ? 'auto' : 'smooth' }));
 $('#cards-next').addEventListener('click', () => deck.scrollBy({ left: deck.clientWidth * 0.75, behavior: reducedMotion.matches ? 'auto' : 'smooth' }));
 deck.addEventListener('scroll', updateDeckControls, { passive: true });
@@ -341,7 +381,7 @@ deck.addEventListener('click', event => {
 deck.addEventListener('pointerdown', event => {
   const card = event.target.closest('[data-card]');
   if (!card || event.button !== 0) return;
-  cardDrag = { id: card.dataset.card, mode: state.mode, view: state.view, x: event.clientX, y: event.clientY, pointerId: event.pointerId, card };
+  cardDrag = { id: card.dataset.card, aircraft: state.aircraft, mode: state.mode, view: state.view, x: event.clientX, y: event.clientY, pointerId: event.pointerId, card };
   card.setPointerCapture(event.pointerId);
 });
 deck.addEventListener('pointermove', event => {
@@ -366,7 +406,7 @@ deck.addEventListener('pointermove', event => {
 function endCardDrag(event, canceled = false) {
   if (!cardDrag || event.pointerId !== cardDrag.pointerId) return;
   const target = document.elementFromPoint(event.clientX, event.clientY)?.closest('[data-target]');
-  const valid = dragging && !canceled && cardDrag.mode === state.mode && cardDrag.view === state.view;
+  const valid = dragging && !canceled && cardDrag.aircraft === state.aircraft && cardDrag.mode === state.mode && cardDrag.view === state.view;
   if (valid && target) { selected = cardDrag.id; attempt(target.dataset.target); }
   dragGhost?.remove();
   dragGhost = null;
@@ -379,7 +419,7 @@ deck.addEventListener('pointercancel', event => endCardDrag(event, true));
 deck.addEventListener('dragstart', event => event.preventDefault());
 $('#hotspots').addEventListener('click', event => { const target = event.target.closest('[data-target]'); if (target) attempt(target.dataset.target); });
 $('#hint-button').addEventListener('click', () => {
-  const part = parts.find(item => item.id === selected) || currentParts().find(item => !isMatched(item.id));
+  const part = allParts().find(item => item.id === selected) || currentParts().find(item => !isMatched(item.id));
   if (!part) { say('This round is complete. Try the other round or switch views!'); return; }
   chooseCard(part.id);
   document.querySelector(`[data-target="${part.id}"]`).classList.add('hinted');
@@ -451,8 +491,9 @@ dialog.addEventListener('click', event => {
   const action = event.target.closest('[data-dialog-action]')?.dataset.dialogAction;
   if (action === 'close') dialog.close();
   if (action === 'reset') {
-    state = createState();
+    state = createState(state.aircraft);
     selected = null;
+    fleet.progress[state.aircraft] = state;
     orders.clear();
     dialog.close();
     switchView('exterior');
@@ -462,5 +503,6 @@ sceneImage.addEventListener('load', () => { loading.hidden = true; fitWorld(); }
 sceneImage.addEventListener('error', () => { loading.hidden = false; loading.textContent = 'This scene could not load. Choose another view and try again.'; });
 if ('ResizeObserver' in window) { resizeObserver = new ResizeObserver(fitWorld); resizeObserver.observe(scene); }
 else addEventListener('resize', fitWorld, { passive: true });
+renderAircraftPicker();
 viewButtons();
 switchView(state.view);
