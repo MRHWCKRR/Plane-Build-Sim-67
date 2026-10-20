@@ -6,8 +6,8 @@ test('introduces the game and serves all local artwork without errors', async ({
   await page.goto('/');
   await expect(page).toHaveTitle(/Plane Build Sim 67/);
   await expect(page.getByRole('heading', { level: 1 })).toContainText('Build it.');
-  await expect(page.getByText('Game coming soon', { exact: true }).first()).toBeVisible();
-  await page.getByRole('link', { name: 'Discover the game' }).click();
+  await expect(page.getByRole('link', { name: 'Enter the aircraft lab' })).toBeVisible();
+  await page.locator('.scroll-cue').click();
   await expect(page).toHaveURL(/#how-it-works$/);
   await page.locator('footer').scrollIntoViewIfNeeded();
   const images = await page.locator('img').evaluateAll(images => Promise.all(images.map(image => new Promise(resolve => {
@@ -43,13 +43,13 @@ test('reduced motion starts with stationary airplanes', async ({ page }) => {
   await expect(page.getByRole('button', { name: 'Animations off: system reduced motion enabled' })).toBeDisabled();
 });
 
-test('mobile navigation fits the screen and reaches the game status', async ({ page }) => {
+test('mobile navigation fits the screen and opens the game', async ({ page }) => {
   await page.setViewportSize({ width: 375, height: 812 });
   await page.goto('/');
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
-  await page.getByRole('link', { name: 'Flight status' }).click();
-  await expect(page).toHaveURL(/#flight-status$/);
-  await expect(page.locator('#flight-status')).toBeInViewport();
+  await page.getByRole('link', { name: 'Play the game' }).click();
+  await expect(page).toHaveURL(/game.html$/);
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('Aircraft lab');
   await page.screenshot({ path: 'test-results/mobile.png', fullPage: true });
 });
 
@@ -59,8 +59,8 @@ test('content and links remain useful without JavaScript', async ({ browser }) =
   await page.goto('http://127.0.0.1:4173');
   await expect(page.locator('#step-build h3')).toBeVisible();
   await expect(page.locator('#step-name h3')).toBeVisible();
-  await page.getByRole('link', { name: 'Flight status' }).click();
-  await expect(page.locator('#flight-status')).toBeInViewport();
+  await page.locator('.scroll-cue').click();
+  await expect(page).toHaveURL(/#how-it-works$/);
   await context.close();
 });
 
