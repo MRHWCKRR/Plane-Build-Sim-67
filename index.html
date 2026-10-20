@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#eaf5fc">
+  <meta name="description" content="A little curiosity. A lot of altitude. Meet Plane Build Sim 67, an upcoming browser game about airplane parts, big ideas, and getting off the ground.">
+  <meta property="og:title" content="Plane Build Sim 67 — Build it. Name it. Fly it.">
+  <meta property="og:description" content="Your next great idea has wings. Discover an upcoming airplane-building revision game.">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="/assets/hero-1600.webp">
+  <title>Plane Build Sim 67 — Build it. Name it. Fly it.</title>
+  <link rel="icon" href="/assets/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="preload" as="image" href="/assets/hero-1600.webp" imagesrcset="/assets/hero-800.webp 800w, /assets/hero-1600.webp 1600w" imagesizes="100vw" fetchpriority="high">
+  <script type="module" src="/app.js"></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+  <header class="site-header">
+    <a class="brand" href="#" aria-label="Plane Build Sim 67 home"><span class="brand-mark" aria-hidden="true">67</span><span>PLANE BUILD<span class="brand-sub">SIMULATOR / 67</span></span></a>
+    <nav aria-label="Main navigation">
+      <a href="#how-it-works">The flight plan</a>
+      <a class="nav-status" href="#flight-status" aria-label="Flight status"><span class="status-dot" aria-hidden="true"></span>In the making<span aria-hidden="true">↗</span></a>
+    </nav>
+  </header>
+  <main id="main">
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-art" aria-hidden="true"><img src="/assets/hero-1600.webp" srcset="/assets/hero-800.webp 800w, /assets/hero-1600.webp 1600w" sizes="100vw" width="1536" height="1024" alt="" fetchpriority="high" decoding="async" data-hero-plane></div>
+      <div class="hero-wash" aria-hidden="true"></div>
+      <div class="hero-content">
+        <p class="eyebrow"><span class="little-line" aria-hidden="true"></span>YOUR NEXT GREAT IDEA HAS WINGS</p>
+        <h1 id="hero-title">Build it.<br>Name it.<br><span>Fly it.</span></h1>
+        <p class="hero-description">A little curiosity. A lot of altitude.<br>Get to know the parts. Put them together.<br>Turn what you learn into lift.</p>
+        <a class="button button-primary" href="#how-it-works">Discover the game <span aria-hidden="true">↗</span></a>
+        <p class="coming-soon"><span class="status-dot" aria-hidden="true"></span>Game coming soon</p>
+      </div>
+      <div class="hero-footer"><a href="#how-it-works" class="scroll-cue"><span aria-hidden="true">↓</span>SCROLL TO EXPLORE</a><span class="hero-coordinate">OPEN SKIES. ENDLESS POSSIBILITIES.</span></div>
+      <div class="photo-label" aria-hidden="true"><span>LET CURIOSITY<br>TAKE FLIGHT.</span><span class="label-cross">+</span></div>
+    </section>
+
+    <div class="intro-strip"><p>FROM <strong>“WHAT DOES THIS DO?”</strong> TO <strong>“LOOK, IT FLIES.”</strong></p><span aria-hidden="true">01 — 03</span></div>
+
+    <section id="how-it-works" class="flight-plan" aria-labelledby="plan-title">
+      <div class="section-heading"><p class="eyebrow">THE FLIGHT PLAN</p><h2 id="plan-title">Big flights.<br><span>Small beginnings.</span></h2><p>Every great takeoff starts with understanding<br class="desktop-break"> what makes a plane a plane.</p></div>
+      <div class="journey" data-journey>
+        <div class="journey-steps">
+          <article class="step" id="step-build"><div class="step-index"><span>01</span><span class="step-rule"></span>THE BUILD</div><h3>A plane starts<br>with the parts.</h3><p>Wings, fuselage, tail, propeller. Discover the pieces that turn a collection of parts into something ready for the sky.</p><span class="step-note">A LITTLE ENGINEERING. A LOT OF POSSIBILITY.</span></article>
+          <article class="step" id="step-name"><div class="step-index"><span>02</span><span class="step-rule"></span>THE KNOW-HOW</div><h3>Know the name.<br>Know the plane.</h3><p>Make revision feel a little more like discovery. Learn what each part is called and the job it does before putting your knowledge to work.</p><span class="step-note">BUILT FOR CURIOUS MINDS.</span></article>
+          <article class="step" id="step-fly"><div class="step-index"><span>03</span><span class="step-rule"></span>THE TAKEOFF</div><h3>Then, give your<br>knowledge wings.</h3><p>That’s the idea behind Plane Build Sim 67: choose the correct parts and names, build your plane, and get it ready to take off.</p><span class="step-note">THE GAME IS STILL IN THE HANGAR.</span></article>
+        </div>
+        <div class="flight-stage" aria-hidden="true">
+          <div class="flight-stage-inner"><span class="stage-corner top-left">+</span><span class="stage-corner top-right">+</span><span class="stage-corner bottom-left">+</span><span class="stage-corner bottom-right">+</span><div class="flight-ring ring-one"></div><div class="flight-ring ring-two"></div><div class="flight-centerline"></div><span class="stage-caption">A LITTLE CLOSER TO TAKEOFF</span><img class="flight-plane" data-flight-plane src="/assets/plane-960.webp" srcset="/assets/plane-640.webp 640w, /assets/plane-960.webp 960w" sizes="(max-width: 760px) 85vw, 55vw" width="1536" height="1024" alt="" loading="lazy" decoding="async"><div class="flight-readout"><span>FLIGHT PLAN / <span data-stage-number>01</span></span><span data-stage-label>GET TO KNOW YOUR PLANE</span></div><div class="flight-progress"><span data-flight-progress></span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="flight-status" id="flight-status" aria-labelledby="status-title">
+      <div class="status-topline"><span class="eyebrow">A WORK IN PROGRESS</span><span class="status-pill"><span class="status-dot" aria-hidden="true"></span>IN THE HANGAR</span></div>
+      <div class="status-content"><div><h2 id="status-title">Good things<br>are <span>taking shape.</span></h2><p>The landing page is here. The game is up next.<br>We’re building a new way to learn, one part at a time.</p><a class="button button-dark" href="https://github.com/MRHWCKRR/Plane-Build-Sim-67" target="_blank" rel="noopener noreferrer">Follow the build on GitHub <span aria-hidden="true">↗</span></a></div><div class="boarding-pass"><div class="pass-header"><strong>PLANE BUILD / 67</strong><span>BOARDING PASS</span></div><div class="pass-route"><div><span>FROM</span><strong>IDEA</strong></div><span class="route-line" aria-hidden="true">············· →</span><div><span>TO</span><strong>SKY</strong></div></div><div class="pass-details"><div><span>FLIGHT</span><strong>PBS 067</strong></div><div><span>DEPARTURE</span><strong>Coming soon</strong></div><div><span>PASSENGER</span><strong>You, the curious</strong></div></div><div class="pass-bottom"><span>KEEP YOUR CURIOSITY ON BOARD.</span><span aria-hidden="true">▌▌▎▌▏▌▌▎▏▌▎▌▌▏</span></div></div></div>
+    </section>
+  </main>
+  <footer><a class="brand footer-brand" href="#"><span class="brand-mark" aria-hidden="true">67</span><span>PLANE BUILD<span class="brand-sub">SIMULATOR / 67</span></span></a><p>A little curiosity goes a long way.</p><div class="footer-actions"><button type="button" class="motion-toggle" aria-pressed="true" aria-label="Turn animations off" hidden data-motion-toggle><span class="motion-icon" aria-hidden="true">Ⅱ</span><span data-motion-label>Motion on</span></button><a href="#" class="back-top">Back to top <span aria-hidden="true">↑</span></a></div></footer>
+</body>
+</html>

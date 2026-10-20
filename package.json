@@ -1,0 +1,27 @@
+{
+  "name": "plane-build-sim-67",
+  "version": "1.0.0",
+  "description": "*Build a plane with the correct parts and names for the virtual plane to take off!* *Interactive game made to revise for exam!!!*",
+  "scripts": {
+    "dev": "node scripts/serve.mjs",
+    "build": "node scripts/build.mjs",
+    "preview": "node scripts/serve.mjs --dist",
+    "test": "node node_modules/playwright/cli.js test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MRHWCKRR/Plane-Build-Sim-67.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "Apache-2.0",
+  "type": "module",
+  "bugs": {
+    "url": "https://github.com/MRHWCKRR/Plane-Build-Sim-67/issues"
+  },
+  "homepage": "https://github.com/MRHWCKRR/Plane-Build-Sim-67#readme",
+  "private": true,
+  "devDependencies": {
+    "playwright": "1.62.1"
+  }
+}
