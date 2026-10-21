@@ -4,7 +4,7 @@ import { aircraft, getParts, getViews } from '../game/fleet.mjs';
 import { createState, restoreFleet, placeCard, countMatches } from '../game/state.mjs';
 
 test('aircraft have appropriate parts and no passenger cabin on the fighter', () => {
-  assert.equal(aircraft.length, 4);
+  assert.equal(aircraft.length, 6);
   assert.equal(getParts('787').find(p => p.id === 'winglets').name, 'Raked wingtips');
   assert.equal(getParts('a220').find(p => p.id === 'yoke').name, 'Sidestick');
   assert.equal(getViews('hornet').some(v => v.id === 'cabin'), false);
@@ -42,4 +42,30 @@ test('corrupt fleet data cannot introduce unknown aircraft, views or removed par
   assert.equal(fleet.active,'737');
   assert.equal(fleet.progress.hornet.view,'exterior');
   assert.equal(countMatches(fleet.progress.hornet),1);
+});
+
+
+test('new aircraft use the correct engine and control layouts', () => {
+  const jumbo = getParts('747');
+  assert.match(jumbo.find(p => p.id === 'throttle').hint, /four/i);
+  const fighter = getParts('f16');
+  assert.equal(getViews('f16').some(v => v.id === 'cabin'), false);
+  assert.equal(fighter.find(p => p.id === 'yoke').name, 'Sidestick');
+  assert.equal(fighter.find(p => p.id === 'aileron').name, 'Flaperons');
+  assert.equal(fighter.find(p => p.id === 'slats').name, 'Leading-edge flaps');
+  assert.equal(fighter.some(p => p.id === 'flaps'), false);
+  assert.equal(fighter.find(p => p.id === 'engines').name, 'Turbofan engine');
+  assert.ok(fighter.every(p => getViews('f16').some(v => v.id === p.view)));
+});
+
+test('existing fleet saves gain new aircraft without losing progress', () => {
+  const old = {active:'a220', progress:{'737':{matches:{names:['aileron'],functions:[]}},a220:{view:'cockpit',matches:{names:['yoke'],functions:[]}}}};
+  const fleet = restoreFleet(JSON.stringify(old));
+  assert.equal(fleet.active, 'a220');
+  assert.equal(countMatches(fleet.progress['737']), 1);
+  assert.equal(countMatches(fleet.progress.a220), 1);
+  for (const id of ['747','f16']) {
+    assert.equal(fleet.progress[id].aircraft, id);
+    assert.equal(countMatches(fleet.progress[id]), 0);
+  }
 });

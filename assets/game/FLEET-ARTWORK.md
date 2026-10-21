@@ -1,6 +1,42 @@
 # Fleet artwork
 
-Generated using the built-in ImageGen tool on 20 October 2026. Scenes are illustrative, with locally hosted 900px and 1440px WebP versions and navigation thumbnails. Each aircraft has its own scenes; the fighter has no passenger cabin. Rejected collage versions were replaced with single interior scenes.
+Generated using the built-in ImageGen tool on 20 and 22 October 2026. Scenes are illustrative, with locally hosted 900px and 1440px WebP versions and navigation thumbnails. Each aircraft has its own scenes; fighters have no passenger cabin. Rejected collage versions were replaced with single interior scenes.
+
+
+# Additional fleet artwork — 22 October 2026
+
+Generated with the built-in ImageGen tool. Each scene is a distinct single-frame raster image, compressed to 900px / 1440px WebP with a 160px thumbnail. No remote image requests are needed during play.
+
+## 747 / exterior
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. An accurate Boeing 747-400 white with blue tail and blue engine nacelles, distinctive upper-deck hump, FOUR engines, upright winglets. Full aircraft seen from elevated FRONT LEFT, nose lower left around (20%,62%), tail upper middle around (65%,27%), near wing extends right to (94%,55%). Landing gear down. Entire plane fits with margins. Wing leading/trailing edges and panel seams visible.
+
+## 747 / cockpit
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. INTERIOR ONLY Boeing 747-400 flight deck from middle behind two pilot seats, looking forward. Uniformed pilot left, right control yoke visible, FOUR thrust levers in center pedestal, glass flight displays, overhead panel, blue sky through windshield. Fill frame with this one cockpit interior, no exterior aircraft.
+
+## 747 / cabin
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. INTERIOR ONLY Boeing 747 main-deck passenger cabin, blue 3-4-3 seats, two aisles, overhead bins and reading lights, view looking forward from rear, no people. Blue upholstered seats foreground and overhead lights clearly visible. Fill frame with one cabin interior.
+
+## 747 / tail
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. Rear left quarter close-up Boeing 747-400 tail assembly, white rear fuselage, large blue single vertical fin near upper center, rudder seam visible on right edge of fin, white horizontal tailplanes extend left/right with elevator seams. Entire fin and both tailplanes fit frame. Not a whole-aircraft distant photo.
+
+## f16 / exterior
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. Accurate F-16C Fighting Falcon gray SINGLE-engine single-seat fighter, one vertical fin, bubble canopy, chin air intake, cropped delta wings, no winglets, no weapons. Full aircraft from elevated FRONT LEFT, nose lower left, tail upper right, near wing extending right, landing gear down, clear wing trailing edge. Entire plane inside frame with margins.
+
+## f16 / cockpit
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. INTERIOR ONLY F-16 single-seat cockpit, camera slightly elevated over pilot left shoulder. Helmeted pilot and ejection seat harness visible at left foreground. RIGHT SIDESTICK clearly visible on right console, single throttle on left console, main flight screens in front and head-up display under canopy. No central stick, no yoke, no passenger seats. Blue sky through bubble canopy. One interior photograph only.
+
+## f16 / tail
+
+Use case: scientific-educational. Photorealistic raster aircraft game scene, landscape 3:2, daylight, crisp realistic aircraft surfaces, blue sky and airport apron. One uninterrupted photograph, no collage, no labels, no arrows, no UI, no logos or readable text. Accurate F-16C tail rear-left-quarter close-up, one single gray vertical fin near upper center with clear rudder seam on its trailing edge, two all-moving horizontal stabilators spreading left/right, ONE large circular engine exhaust centered below fin. Entire tail and stabilators inside frame, no weapons. Airport apron blue sky.
+
+Technical references: [Boeing 747-400 airport planning](https://www.boeing.com/content/dam/boeing/v2/airports/acaps/747-400_Rev_F.pdf), [Lockheed Martin F-16 history](https://www.lockheedmartin.org/en-us/news/features/history/f16.html), and [USAF F-16 flight manual](https://info.publicintelligence.net/USAF-F16.pdf). Artwork and targets are illustrative, not engineering diagrams.
+
 
 ## 787 / exterior
 

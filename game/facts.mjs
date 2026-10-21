@@ -26,10 +26,16 @@ export const partFacts = {
   elevator: ['Pitch control was central to the Wright brothers’ early designs.', 'Their early pitch-control surface was ahead of the wings.', controls],
 };
 export function factsFor(part, aircraft) {
-  if (aircraft === 'hornet' && part.id === 'windows') return ['Fighter canopies developed from earlier open pilot stations.', 'A clear canopy gives the pilot a wide view.', 'https://www.nasa.gov/reference/f-18-harv/'];
+  const falcon = 'https://www.lockheedmartin.org/en-us/news/features/history/f16.html';
+  if (aircraft === 'f16' && part.id === 'yoke') return ['The F-16 adopted a side-mounted control stick and electronic flight controls.', 'Its stick sits on the pilot’s right console.', falcon];
+  if (aircraft === 'f16' && part.id === 'aileron') return ['Designers combined flap and aileron functions in a single surface.', '“Flaperon” combines the words flap and aileron.', faa];
+  if (aircraft === 'f16' && part.id === 'slats') return ['Movable leading edges helped fast aircraft manage airflow.', 'Leading-edge flaps change the shape at the front of the wing.', faa];
+  if (aircraft === 'f16' && part.id === 'throttle') return ['Engine thrust controls evolved alongside jet propulsion.', 'This single-engine fighter uses one throttle.', falcon];
+  if (aircraft === '747' && part.id === 'throttle') return ['Multi-engine aircraft developed separate controls for each engine.', 'The 747 has four thrust levers, one for each engine.', faa];
+  if (['hornet', 'f16'].includes(aircraft) && part.id === 'windows') return ['Fighter canopies developed from earlier open pilot stations.', 'A clear canopy gives the pilot a wide view.', 'https://www.nasa.gov/reference/f-18-harv/'];
   if (aircraft === '787' && part.id === 'winglets') return ['Designers have explored many ways to improve wingtip efficiency.', 'An efficient wingtip does not have to stand upright.', winglets];
-  if (aircraft === 'hornet' && part.id === 'horizontal-stabilizer') return ['Fast jets adopted all-moving horizontal tail surfaces.', 'A stabilator combines the jobs of a stabilizer and elevator.', 'https://www.nasa.gov/reference/f-18-harv/'];
-  if (aircraft === 'hornet' && part.id === 'seats') return ['Ejection seats were developed to help crews escape fast aircraft.', 'This is emergency equipment, not an ordinary passenger seat.', faa];
-  if (aircraft === 'hornet' && part.id === 'lights') return ['Cockpit lighting evolved alongside illuminated flight instruments.', 'Instrument lighting helps pilots read their controls after dark.', faa];
+  if (['hornet', 'f16'].includes(aircraft) && part.id === 'horizontal-stabilizer') return ['Fast jets adopted all-moving horizontal tail surfaces.', 'A stabilator combines the jobs of a stabilizer and elevator.', 'https://www.nasa.gov/reference/f-18-harv/'];
+  if (['hornet', 'f16'].includes(aircraft) && part.id === 'seats') return ['Ejection seats were developed to help crews escape fast aircraft.', 'This is emergency equipment, not an ordinary passenger seat.', faa];
+  if (['hornet', 'f16'].includes(aircraft) && part.id === 'lights') return ['Cockpit lighting evolved alongside illuminated flight instruments.', 'Instrument lighting helps pilots read their controls after dark.', faa];
   return partFacts[part.id];
 }

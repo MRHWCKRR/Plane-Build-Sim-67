@@ -74,3 +74,24 @@ test('mobile aircraft picker supports fighter views and compact part notes', asy
   await expect(page.locator('#match-count')).toHaveText('1');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
 });
+
+
+test('new planes are available on mobile and retain separate progress', async ({ page }) => {
+  await page.setViewportSize({width:375,height:812});
+  await page.goto('/game.html');
+  const picker = page.getByRole('combobox',{name:'Choose aircraft'});
+  await picker.selectOption('747');
+  await page.locator('[data-card="aileron"]').click();
+  await page.locator('[data-target="aileron"]').click();
+  await picker.selectOption('f16');
+  await expect(page.getByRole('button',{name:'View Cabin',exact:true})).toHaveCount(0);
+  await page.locator('[data-card="aileron"]').click();
+  await expect(page.locator('#part-note-title')).toHaveText('Flaperons');
+  await page.locator('[data-target="aileron"]').click();
+  await page.reload();
+  await expect(picker).toHaveValue('f16');
+  await expect(page.locator('#match-count')).toHaveText('1');
+  await picker.selectOption('747');
+  await expect(page.locator('#match-count')).toHaveText('1');
+  expect(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth)).toBe(true);
+});

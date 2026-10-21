@@ -8,11 +8,11 @@ A sky-themed introduction with locally hosted AI-generated airplane imagery and 
 
 ## Aircraft Lab
 
-Choose a Boeing 737, Boeing 787, Airbus A220, or F/A-18 Hornet. Each aircraft has distinct AI-generated scenes and its own saved progress. Airliners have exterior, cockpit, cabin and tail views; the fighter has exterior, cockpit and tail views. Airliners each offer 40 name/function matches; the Hornet offers 32.
+Choose a Boeing 737, Boeing 787, Airbus A220, Boeing 747-400, F/A-18 Hornet, or F-16 Fighting Falcon. Each aircraft has distinct AI-generated scenes and its own saved progress. Airliners have exterior, cockpit, cabin and tail views; fighters have exterior, cockpit and tail views. Airliners each offer 40 name/function matches; each fighter offers 32.
 
 Part cards are text-only. Selecting or dragging a name opens a brief history and fun-fact panel, with a source link. Definition cards reveal their notes only after a correct match. The desktop notes column stays reserved so targets do not shift during a drag; smaller screens use a compact dismissible overlay. The “Explore, match, discover” strip has been removed.
 
-Aircraft-specific details include raked wingtips on the 787, a sidestick in the A220, and a canopy, control stick, ejection seat and stabilator on the Hornet. The Hornet has no passenger cabin and omits airliner-only tasks. Its engine target is in the rear view where the exhausts are visible.
+Aircraft-specific details include raked wingtips on the 787, a sidestick in the A220, and a canopy, control stick, ejection seat and stabilator on the Hornet. Fighters have no passenger cabin and omit airliner-only tasks. The 747 has four thrust levers; the F-16 has a right-hand sidestick, flaperons, leading-edge flaps and a single engine. Fighter engine targets are in the rear view where the exhausts are visible.
 
 - Collapsible desktop sidebar and compact mobile navigation.
 - Switch views freely without losing progress.
