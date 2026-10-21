@@ -23,7 +23,7 @@ export const positions = {
   f16: {
     'vertical-stabilizer': point(50,30,-13,-5), rudder: point(57,30,11,2), 'horizontal-stabilizer': point(26,73,-7,12),
     pilot: point(13,34,1,15), seats: point(12,73,7,8), yoke: point(80,68,7,11), throttle: point(36,58,-5,12), display: point(47,45,1,-12), lights: point(84,56,7,-11),
-    aileron: point(84,52,4,11), slats: point(76,48,1,-12), cockpit: point(34,44,-12,0),
+    aileron: point(84,52,4,11), slats: point(76,48,-3,12), cockpit: point(34,44,-12,0),
     windows: point(38,39,0,-13), fuselage: point(52,47,0,-13), 'landing-gear': point(40,77,7,7),
   },
   '747': {

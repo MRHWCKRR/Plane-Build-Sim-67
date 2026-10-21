@@ -63,3 +63,7 @@ Vercel reads `vercel.json`, runs `npm run build`, and serves `dist`. Pushes to t
 
 The production page has no runtime dependencies, server, account system, or remote progress storage.
 
+
+### Takeoff celebration
+
+Completing every part name and definition for an aircraft starts a short departure sequence: preparation, runway acceleration, liftoff and an airborne finish. Each of the six aircraft uses its own AI-generated transparent raster sprite. Skip or replay the sequence, or return to exploring with saved progress intact. Reduced-motion settings show a static airborne scene. Animations pause when the tab is hidden and are cancelled when the completion dialog closes. Sprites load only when the flight report opens.

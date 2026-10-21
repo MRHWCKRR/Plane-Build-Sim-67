@@ -1,3 +1,4 @@
+import { takeoffMarkup, mountTakeoff } from './takeoff.mjs';
 import { SOURCE_URL } from './data.mjs';
 import { aircraft, getAircraft, getParts, getViews, sceneBase } from './fleet.mjs';
 import { factsFor } from './facts.mjs';
@@ -30,6 +31,7 @@ const feedback = $('#feedback');
 const dialog = $('#info-dialog');
 const cameraToggle = $('#camera-toggle');
 let resizeObserver;
+let stopTakeoff = () => {};
 
 function save() {
   try {
@@ -166,7 +168,7 @@ function renderCards() {
     const action = document.createElement('button');
     if (countMatches(state) === totalMatches()) {
       text.textContent = 'Every part. Every purpose. You know your aircraft!';
-      action.textContent = 'Your flight report ↗';
+      action.textContent = 'Watch your takeoff ↗';
       action.addEventListener('click', showCompletion);
     } else {
       const otherMode = state.mode === 'names' ? 'functions' : 'names';
@@ -338,14 +340,27 @@ function switchView(id) {
   save();
 }
 
+function closeDialog() {
+  stopTakeoff();
+  stopTakeoff = () => {};
+  dialog.close();
+}
 function openDialog(html) {
-  if (dialog.open) dialog.close();
+  stopTakeoff();
+  stopTakeoff = () => {};
+  dialog.classList.remove('flight-dialog');
+  if (dialog.open) closeDialog();
   $('#dialog-content').innerHTML = html;
   dialog.showModal();
 }
 function showCompletion() {
-  openDialog(`<div class="achievement" aria-hidden="true">✦</div><p class="micro">ALL KNOWLEDGE ON BOARD</p><h2 id="dialog-title">Cleared for takeoff!</h2><p>You explored every corner, named every part and matched every purpose. That’s an aircraft’s worth of discovery.</p><div class="completion-stats"><div><strong>${allParts().length}</strong><span>parts discovered</span></div><div><strong>${totalMatches()}</strong><span>matches made</span></div><div><strong>${availableViews().length}</strong><span>views explored</span></div></div><p>Curiosity looks good on you. Take another look around, or start a fresh flight.</p><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Keep exploring</button><button class="dialog-button" data-dialog-action="reset">Start a fresh flight</button></div>`);
+  if (countMatches(state) !== totalMatches()) return;
+  const plane = getAircraft(state.aircraft);
+  openDialog(`<p class="micro">ALL KNOWLEDGE ON BOARD / ${plane.name}</p><h2 id="dialog-title">Cleared for takeoff!</h2>${takeoffMarkup(plane)}<div class="completion-stats"><div><strong>${allParts().length}</strong><span>parts discovered</span></div><div><strong>${totalMatches()}</strong><span>matches made</span></div><div><strong>${availableViews().length}</strong><span>views explored</span></div></div><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Keep exploring</button><button class="dialog-button" data-dialog-action="reset">Start a fresh flight</button></div>`);
+  dialog.classList.add('flight-dialog');
+  stopTakeoff = mountTakeoff(dialog.querySelector('.takeoff'));
 }
+
 function showHelp() {
   openDialog(`<p class="micro">WELCOME TO YOUR AIRCRAFT LAB</p><h2 id="dialog-title">A little curiosity is all you need.</h2><ol><li><strong>Pick a view.</strong> Explore the exterior, cockpit, passenger cabin or tail. Switch whenever you like.</li><li><strong>Choose your round.</strong> Match part names first, then switch to “What they do” to match definitions.</li><li><strong>Make a match.</strong> Drag a card onto its numbered marker, or select the card and then select the marker. Keyboard users can use Tab and Enter.</li><li><strong>Look closer.</strong> Scroll over the aircraft to zoom, or use + and −. At higher zoom, move your pointer toward an edge to look that way. Use ⤢ to reset.</li><li><strong>Keep discovering.</strong> Hints are free. Wrong guesses never cost points. Progress saves on this device when storage is available.</li></ol><p>The scenes are AI-generated, with gentle photo-based camera motion. This is an identification game, not a flight simulator.</p><div class="dialog-actions"><button class="dialog-button primary" data-dialog-action="close">Let’s explore →</button></div>`);
 }
@@ -486,16 +501,18 @@ $('#sidebar-toggle').addEventListener('click', () => {
 $('#guide-button').addEventListener('click', showGuide);
 $('#help-button').addEventListener('click', showHelp);
 $('#restart-button').addEventListener('click', confirmReset);
-$('.dialog-close').addEventListener('click', () => dialog.close());
+dialog.addEventListener('cancel', () => { stopTakeoff(); stopTakeoff = () => {}; });
+dialog.addEventListener('close', () => { if (!dialog.open) { stopTakeoff(); stopTakeoff = () => {}; } });
+$('.dialog-close').addEventListener('click', closeDialog);
 dialog.addEventListener('click', event => {
   const action = event.target.closest('[data-dialog-action]')?.dataset.dialogAction;
-  if (action === 'close') dialog.close();
+  if (action === 'close') closeDialog();
   if (action === 'reset') {
     state = createState(state.aircraft);
     selected = null;
     fleet.progress[state.aircraft] = state;
     orders.clear();
-    dialog.close();
+    closeDialog();
     switchView('exterior');
   }
 });
