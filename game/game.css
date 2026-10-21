@@ -236,7 +236,7 @@ dialog.flight-dialog { width: 820px; max-width: min(820px,calc(100vw - 24px)); p
 .takeoff-horizon { position: absolute; bottom: 25%; left: 0; right: 0; height: 8%; background: linear-gradient(transparent,#63918b66); }
 .takeoff-runway { position: absolute; bottom: 0; height: 25%; width: 100%; background: linear-gradient(#6e8291,#3a4f60); border-top: 3px solid #e6edf0; overflow: hidden; }
 .runway-markings { position: absolute; top: 42%; left: 0; width: 500%; height: 5px; background: repeating-linear-gradient(90deg,transparent 0 70px,#ffffffc2 70px 125px,transparent 125px 180px); }
-.takeoff-plane { position: absolute; left: 2%; bottom: 25%; width: 68%; height: auto; transform-origin: 55% 80%; z-index: 2; }
+.takeoff-airframe { position: absolute; left: 2%; bottom: 25%; width: 68%; height: auto; transform-origin: 55% 80%; z-index: 2; }
 .takeoff-shadow { position: absolute; bottom: 23%; left: 8%; width: 57%; height: 3%; border-radius: 50%; background: #1d344a; filter: blur(5px); opacity: .25; }
 .takeoff-aircraft-name { position: absolute; left: 15px; top: 15px; padding: 7px 9px; color: #224d6c; background: #ffffffc9; border-radius: 4px; font-size: 10px; }
 .takeoff-caption { display: flex; justify-content: space-between; align-items: center; gap: 16px; margin-top: 18px; min-height: 68px; }
@@ -247,7 +247,7 @@ dialog .takeoff-detail { margin: 5px 0 0; font-size: 12px; }
 .takeoff-checklist { display: flex; gap: 6px; list-style: none; padding: 0; margin: 12px 0 24px; }
 dialog .takeoff-checklist li { flex: 1; border-top: 3px solid #e1e9f0; padding: 9px 0 0; margin: 0; color: #8699aa; font-size: 10px; }
 dialog .takeoff-checklist li.done { border-color: #3b83df; color: #245d9a; }
-.takeoff[data-stage=airborne] .takeoff-plane { transform: translate(35%,-55%) rotate(-9deg); }
+.takeoff[data-stage=airborne] .takeoff-airframe { transform: translate(35%,-55%) rotate(-9deg); }
 .takeoff[data-stage=airborne] .takeoff-shadow { opacity: 0; }
 @media(max-width:580px) {
  dialog.flight-dialog { padding: 30px 16px 20px; }
@@ -259,5 +259,33 @@ dialog .takeoff-checklist li.done { border-color: #3b83df; color: #245d9a; }
  dialog .takeoff-checklist li { font-size: 9px; }
 }
 @media(prefers-reduced-motion:reduce) {
- .takeoff[data-stage=airborne] .takeoff-plane { transform: translate(20%,-35%) rotate(-6deg); }
+ .takeoff[data-stage=airborne] .takeoff-airframe { transform: translate(20%,-35%) rotate(-6deg); }
+}
+
+.takeoff-plane { display: block; width: 100%; height: auto; }
+.takeoff-gear-up { position: absolute; top: 0; left: 0; width: 100%; height: auto; opacity: 0; }
+.takeoff[data-gear-art=ready][data-stage=airborne] .takeoff-plane { opacity: 0; }
+.takeoff[data-gear-art=ready][data-stage=airborne] .takeoff-gear-up { opacity: 1; }
+.takeoff-systems { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 12px; }
+.takeoff-systems span { background: #edf4fb; border: 1px solid #dce7f1; color: #476b89; padding: 6px 8px; border-radius: 4px; font-size: 10px; }
+.takeoff-actions { display: flex; gap: 7px; }
+.takeoff-pause { border: 1px solid #cbddea; color: #35648c; border-radius: 5px; background: white; padding: 11px; font: inherit; font-size: 11px; }
+.takeoff-caption { min-height: 40px; margin-top: 12px; }
+.takeoff-lesson { display: flex; gap: 14px; align-items: center; min-height: 75px; margin: 10px 0; }
+.takeoff-closeup { object-fit: cover; width: 100px; height: 68px; border-radius: 5px; flex-shrink: 0; }
+dialog .takeoff-detail { margin: 0; line-height: 1.7; }
+.takeoff-checklist { display: grid; grid-template-columns: repeat(5,minmax(0,1fr)); row-gap: 10px; }
+.takeoff-explained { border-top: 1px solid #dfE8f0; padding-top: 12px; margin: 0 0 14px; }
+.takeoff-explained summary { cursor: pointer; font-size: 12px; color: #35648c; padding: 5px 0; }
+.takeoff-explained strong { color: #234764; }
+dialog .takeoff-explained p { font-size: 11px; margin: 4px 0 10px; }
+.takeoff-explained a { color: #2260de; text-decoration: underline; }
+@media(max-width:580px) {
+ .takeoff-caption { flex-direction: column; gap: 9px; }
+ .takeoff-actions { align-self: flex-end; }
+ .takeoff-pause { font-size: 10px; padding: 10px 8px; }
+ .takeoff-systems span { font-size: 8px; padding: 5px 6px; }
+ .takeoff-lesson { align-items: flex-start; gap: 9px; }
+ .takeoff-closeup { width: 76px; height: 56px; }
+ dialog .takeoff-checklist li { font-size: 8px; }
 }

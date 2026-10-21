@@ -1,5 +1,15 @@
 # Takeoff sprites
 
+## Gear-up variants — 22 October 2026
+
+The six original WebP sprites were edited with the built-in ImageGen tool, preserving transparency. Gear-up frames are trimmed and resized to 960px WebP and crossfade after positive climb. Original gear-down files remain unchanged.
+
+Prompt applied individually to each aircraft:
+
+Edit this exact raster aircraft cutout: retract the landing gear fully into the aircraft. Remove wheels, struts and protruding landing gear doors, close gear bays with smooth matching skin. Keep the aircraft fuselage, wings, engines, tail, livery, side profile, nose pointing right and perspective exactly unchanged. Entire aircraft contained in image. Preserve transparent background. No ground or shadow, no added text. Keep original proportions and do not crop the tail or nose. This is the gear-up frame of the same aircraft animation; visual identity must match exactly.
+
+Departure explanations use the FAA Airplane Flying Handbook chapters 2, 6 and 12: https://www.faa.gov/regulations_policies/handbooks_manuals/aviation/airplane_handbook . Aircraft-specific terminology follows the fleet data; this is an illustrative educational sequence with no fixed operational flap angles, speeds or heights.
+
 Generated with the built-in ImageGen tool on 22 October 2026. Transparent raster PNG sources were trimmed and compressed to 960px WebP with alpha preserved. Sprites load on completion only; no image API is called at runtime.
 
 ## 737

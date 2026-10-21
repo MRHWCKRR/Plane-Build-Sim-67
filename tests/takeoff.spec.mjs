@@ -1,4 +1,5 @@
 import { test, expect } from 'playwright/test';
+import { departureSteps } from '../game/departure.mjs';
 import { aircraft, getParts } from '../game/fleet.mjs';
 
 async function nearlyComplete(page, id, missingCount = 1) {
@@ -17,7 +18,7 @@ async function match(page, part) {
   await page.locator(`[data-target="${part.id}"]`).click();
 }
 async function seekFlight(page, time) {
-  await page.locator('.takeoff-plane').evaluate((plane,time) => { plane.getAnimations()[0].currentTime = time; }, time);
+  await page.locator('.takeoff').evaluate((root,time) => { for (const animation of root.getAnimations({subtree:true})) animation.currentTime = time; }, time);
 }
 
 for (const plane of aircraft) test(`${plane.name} prepares, accelerates and takes off after the final definition`, async ({page}) => {
@@ -26,11 +27,19 @@ for (const plane of aircraft) test(`${plane.name} prepares, accelerates and take
   await match(page,last);
   await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','preparing');
   await expect(page.locator('.takeoff-plane')).toHaveAttribute('src',`/assets/game/takeoff/${plane.id}.webp`);
-  await seekFlight(page,2800);
-  await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','rolling');
-  await seekFlight(page,6500);
-  await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','rotating');
-  await page.locator('.takeoff-plane').evaluate(plane=>plane.getAnimations()[0].finish());
+  for (const step of departureSteps(plane.id).slice(1,-1)) {
+    await seekFlight(page,step.at+200);
+    await expect(page.locator('.takeoff')).toHaveAttribute('data-stage',step.id);
+    await expect(page.locator('.takeoff-status')).toHaveText(step.title);
+    if (step.id === 'climbing') await expect(page.locator('.system-gear')).toHaveText('Gear: down');
+    if (step.id === 'gear') await expect(page.locator('.system-gear')).toHaveText('Gear: retracting');
+    if (step.id === 'cleanup') {
+      await expect(page.locator('.system-gear')).toHaveText('Gear: up');
+      await expect(page.locator('.takeoff-gear-up')).toHaveCSS('opacity','1');
+      await expect(page.locator('.takeoff-plane')).toHaveCSS('opacity','0');
+    }
+  }
+  await page.locator('.takeoff-airframe').evaluate(plane=>plane.getAnimations()[0].finish());
   await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','airborne');
   await expect(page.getByRole('button',{name:'Replay takeoff'})).toBeVisible();
   await expect(page.locator('#match-count')).toHaveText(String(getParts(plane.id).length*2));
@@ -64,7 +73,7 @@ test('reduced motion shows a static departure on small screens',async({page})=>{
   await match(page,last);
   await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','airborne');
   await expect(page.getByRole('button',{name:'Skip animation'})).toBeHidden();
-  expect(await page.locator('.takeoff-plane').evaluate(img=>img.getAnimations().length)).toBe(0);
+  expect(await page.locator('.takeoff-airframe').evaluate(img=>img.getAnimations().length)).toBe(0);
   expect(await page.getByRole('dialog').evaluate(d=>d.scrollWidth<=d.clientWidth)).toBe(true);
 });
 
@@ -74,7 +83,7 @@ test('changing motion preference stops a running flight',async({page})=>{
   await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','preparing');
   await page.emulateMedia({reducedMotion:'reduce'});
   await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','airborne');
-  expect(await page.locator('.takeoff-plane').evaluate(img=>img.getAnimations().length)).toBe(0);
+  expect(await page.locator('.takeoff-airframe').evaluate(img=>img.getAnimations().length)).toBe(0);
 });
 
 
@@ -86,4 +95,18 @@ test('unavailable takeoff artwork leaves the report usable',async({page})=>{
   await expect(page.locator('.takeoff-detail')).toContainText('image could not load');
   await page.getByRole('button',{name:'Keep exploring'}).click();
   await expect(page.locator('#match-count')).toHaveText('40');
+});
+
+
+test('pause holds the sequence and the full explanation remains readable',async({page})=>{
+  const [last]=await nearlyComplete(page,'737');
+  await match(page,last);
+  await expect(page.locator('.takeoff')).toHaveAttribute('data-stage','preparing');
+  await page.getByRole('button',{name:'Pause',exact:true}).click();
+  expect(await page.locator('.takeoff-airframe').evaluate(el=>el.getAnimations()[0].playState)).toBe('paused');
+  await page.getByText('Read the takeoff steps',{exact:true}).click();
+  await expect(page.locator('.takeoff-explained')).toContainText('Gear indications confirm retraction');
+  await expect(page.locator('.takeoff-explained')).toContainText('retracts them in stages');
+  await page.getByRole('button',{name:'Resume',exact:true}).click();
+  expect(await page.locator('.takeoff-airframe').evaluate(el=>el.getAnimations()[0].playState)).toBe('running');
 });
